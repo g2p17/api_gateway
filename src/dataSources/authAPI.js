@@ -12,6 +12,16 @@ class AuthAPI extends RESTDataSource {
         user = new Object(JSON.parse(JSON.stringify(user)));
         return await this.post('/user-customer/', user);
     }
+
+    async signInUser(credentials){
+        credentials = new Object(credentials);
+        return await this.post('/login/', credentials);
+    }
+
+    async getUser(userId){
+        console.info(userId);
+        return await this.get(`/user-customer/detail/${userId}/`);
+    }
 }
 
 module.exports = AuthAPI;
