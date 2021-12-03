@@ -1,0 +1,23 @@
+{
+  "name": "apigateway",
+  "version": "1.0.0",
+  "description": "\"This is an API Gateway to handle requests from a parking lot app clients",
+  "main": "src/index.js",
+  "dependencies": {
+    "apollo-datasource-rest": "^3.1.1",
+    "apollo-server": "^3.1.2",
+    "graphql": "^15.5.1",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "serve": "node src/index.js",
+    "start": "nodemon src/index.js"
+  },
+  "author": "Toya Varoa and Juan Urbano",
+  "license": "ISC"
+}
