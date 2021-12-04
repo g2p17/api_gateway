@@ -32,18 +32,37 @@ const authTypes = gql `
         vehiclePlate: String!
     }
 
+    type InfoCustomer {
+        clientId: String!
+        parkingLot: String!              
+        vehicleType: String!
+        vehiclePlate: String!        
+    }
+
+    input ReservationUpdate {
+        parkingLot: String!
+        vehicleType: String!
+        vehiclePlate: String!
+        entryTime: String!
+        estimatedTime: Int!       
+    }
+
     type ResultReservation {
         reservation: String!
     }
 
-    type Query {
+    extend type Query {
         reservationsDetailByparkingLot(parkinglot:String!):[ ReservationDetailParkinglot ]!
+        reservationsDetailByparkingLotCustomers(parkinglot:String!):[ InfoCustomer ]!
+        reservationCountReservation(parkinglot: String!): ResultReservation!
         reservationsDetail:[ ReservationDetail ]!
-        reservationDetailById(reservationId:Int!):ReservationDetail!
+        reservationById(reservationId:String!): ReservationDetail!
     }
 
-    type Mutation{
+    extend type Mutation{
         registerReservation(reservationInput:ReservationInput):ResultReservation!
+        deleteReservation(reservationId:String!): String!
+        updateReservation(reservationId:String, reservationUpdate: ReservationUpdate!): ReservationDetail!
     }
 `;
 
