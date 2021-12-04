@@ -10,36 +10,53 @@ const parkingResolver = {
         },
         
         listParking_admin: async(_, { adminId }, { dataSources, userIdToken }) => {
-            /* listParking_admin(adminId:String!):[Parking]*/
-
+            identityToken = (await dataSources.authAPI.getUser(userIdToken)).identity_document
+            if(identityToken == adminId)
+                return await dataSources.parkingAPI.getparkingByAdmin(adminId);
+            
+            return null;
         },
 
         listParking_place: async(_, { parkingPlace }, { dataSources, userIdToken }) => {
-            /* listParking_place(parkingPlace:String!):[Parking]*/ 
+            identityToken = (await dataSources.authAPI.getUser(userIdToken)).identity_document        
+            placeAdminID =( await dataSources.parkingAPI.getparkingByPlace(parkingPlace))
+            const myVal = placeAdminID.find(function(element) {
+                return element ;
+              });
+
+            if(identityToken == myVal.admin_id)
+                return await dataSources.parkingAPI.getparkingByPlace(parkingPlace); 
+
+            return null; 
         },
 
-        parkings: async(_, { }, { dataSources, userIdToken  }) => {
-            /* parkings:[Parking]*/ 
+        parkings: async(_, { }, { dataSources }) => {
+            return await dataSources.parkingAPI.getAllParkings(); 
         },   
 
     },
     Mutation: {
         /*parkingCreate(parking:ParkingInput!):Parking*/
-        parkingCreate: async(_, { parking }, { dataSources, userIdToken }) => {
+        parkingCreate: async(_, { parkingC }, { dataSources, userIdToken }) => {
             identityToken = (await dataSources.authAPI.getUser(userIdToken)).identity_document
-            if(parking.admin_id == identityToken)
-            console.log(parking.admin_id +"  ADMIN")
-                return await dataSources.parkingAPI.createParking(parking);
-           
+            if(parkingC.admin_id == identityToken)
+                return await dataSources.parkingAPI.parkingCreate(parkingC);
+            
             return null;
         },
 
-        parkingUpdate: async(_, { parking }, { dataSources, userIdToken }) => {
+
+        parkingUpdate: async(_, { parkId, parkingUp }, { dataSources, userIdToken }) => {
             /* parkingUpdate(parking:ParkingUpdate!):Parking*/
         },
         
         parkingDelete: async(_, { parkId }, { dataSources, userIdToken }) => {
-            /* parkingDelete(parkId:Int!): String!*/
+            identityToken = (await dataSources.authAPI.getUser(userIdToken)).identity_document
+            adminparkingplace = (await dataSources.parkingAPI.getparkingPlaceById(parkId)).admin_id
+            if(identityToken == adminparkingplace)
+                return await dataSources.parkingAPI.deleteParking(parkId);
+            
+            return null;
         }, 
     }
 };

@@ -9,9 +9,9 @@ class ParkingAPI extends RESTDataSource {
         this.baseURL = serverConfig.parking_api_url;
     }
 
-    async createParking(parking){
-        parking = new Object(JSON.parse(JSON.stringify(parking)));
-        return await this.post('/parking/create', parking);
+    async parkingCreate(parkingC){
+        parkingC = new Object(JSON.parse(JSON.stringify(parkingC)));
+        return await this.post('/parking/create');
     }
 
     async getparkingPlaceById(parkId){
@@ -26,9 +26,13 @@ class ParkingAPI extends RESTDataSource {
         return await this.get(`/parking/place/${parkingPlace}`);
     }
 
+    async getAllParkings(){
+        return await this.get(`/parkings`);
+    }
+
     async updateParking(parkId){
         parking = new Object(JSON.parse(JSON.stringify(parkId)));
-        return await this.put(`/parking/update/${parkId}`);
+        return await this.put(`/parking/update/${parkId}`, parking);
     }
 
     async deleteParking(parkId){

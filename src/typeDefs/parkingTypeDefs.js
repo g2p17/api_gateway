@@ -46,8 +46,8 @@ const parkingTypes = gql `
     }
 
     extend type Mutation {
-        parkingCreate(parking:ParkingInput!):Parking
-        parkingUpdate(parking:ParkingUpdate!):Parking
+        parkingCreate(parkingC:ParkingInput!):Parking
+        parkingUpdate(parkingUp:ParkingUpdate!):Parking
         parkingDelete(parkId:Int!): String!  
     }
 `;
