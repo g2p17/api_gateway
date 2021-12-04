@@ -12,6 +12,15 @@ const authTypes = gql `
         role                : String!
     }
 
+    input SignUpInputAdmin {
+        username            : String!
+        identity_document   : String!
+        phone_number        : String!
+        password            : String!
+        name                : String!
+        email               : String!
+    }
+
     input CredentialsInput {
         username:String!
         password:String!
@@ -22,15 +31,31 @@ const authTypes = gql `
         access :String!
     }
 
-
     type UserDetail{
-        id                  :Int!
-        username            :String!
-        name                :String!
-        email               :String!
-        identity_document   :String!
-        phone_number        :String!
-        role                :String!                
+        id                  : Int!
+        username            : String!
+        name                : String!
+        email               : String!
+        identity_document   : String!
+        phone_number        : String!
+        role                : String!
+    }
+
+    input Refresh {
+        refresh:String!
+    }
+
+    type Access {
+        access:String!
+    }
+
+    input UserUpdate{
+        name              : String!
+        email             : String!
+        username          : String!
+        password          : String!
+        identity_document : String!
+        phone_number      : String!    
     }
 
     type Query {
@@ -39,7 +64,11 @@ const authTypes = gql `
 
     type Mutation{
         signUpUser(userInput:SignUpInput):Tokens!
+        signUpUserAdmin(userInput:SignUpInputAdmin):Tokens!
         logIn(credentials:CredentialsInput!):Tokens!
+        refreshToken(token:Refresh!):Access!
+        updateUser(userId:Int!, user:UserUpdate!):UserDetail!
+        deleteUser(userId:Int!):String!
     }
 `;
 
