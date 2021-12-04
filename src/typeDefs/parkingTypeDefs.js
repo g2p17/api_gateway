@@ -38,14 +38,14 @@ const parkingTypes = gql `
         person_with_disability_price: Int!
     }
 
-    type Query {
+    extend type Query {
         parkingDetail(parkId:Int!): Parking
         listParking_admin(adminId:String!):[Parking]
         listParking_place(parkingPlace:String!):[Parking]
         parkings:[Parking]
     }
 
-    type Mutation {
+    extend type Mutation {
         parkingCreate(parking:ParkingInput!):Parking
         parkingUpdate(parking:ParkingUpdate!):Parking
         parkingDelete(parkId:Int!): String!  

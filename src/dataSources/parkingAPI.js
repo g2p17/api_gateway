@@ -14,15 +14,15 @@ class ParkingAPI extends RESTDataSource {
         return await this.post('/parking/create', parking);
     }
 
-    async parkingById(parkId){
+    async getparkingPlaceById(parkId){
         return await this.get(`/parking/${parkId}`);
     }
 
-    async parkingByAdmin(adminId){
+    async getparkingByAdmin(adminId){
         return await this.get(`/parking/admin/${adminId}`);
     }
 
-    async parkingByPlace(parkingPlace){
+    async getparkingByPlace(parkingPlace){
         return await this.get(`/parking/place/${parkingPlace}`);
     }
 
