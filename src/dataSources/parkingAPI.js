@@ -10,7 +10,7 @@ class ParkingAPI extends RESTDataSource {
     }
 
     async createParking(parking){
-        account = new Object(JSON.parse(JSON.stringify(parking)));
+        parking = new Object(JSON.parse(JSON.stringify(parking)));
         return await this.post('/parking/create', parking);
     }
 

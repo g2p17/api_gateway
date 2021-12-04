@@ -15,7 +15,6 @@ const parkingTypes = gql `
     }
 
     input ParkingInput {
-        id: Int!
         admin_id: String!
         parking_place: String!
         vehicle_slots: Int!
@@ -40,7 +39,7 @@ const parkingTypes = gql `
     }
 
     type Query {
-        parkingDetail(parkId:Int!): ParkingDetail
+        parkingDetail(parkId:Int!): Parking
         listParking_admin(adminId:String!):[Parking]
         listParking_place(parkingPlace:String!):[Parking]
         parkings:[Parking]

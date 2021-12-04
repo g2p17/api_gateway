@@ -1,78 +1,48 @@
 const parkingResolver = {
-    Query: {
+    Query: {      
         parkingDetail: async(_, { parkId }, { dataSources, userIdToken}) => {
-            /*parkingDetail(parkId:Int!): ParkingDetail*/
+            console.log(parkId+"captura")
             identityToken = (await dataSources.authAPI.get(userIdToken)).identity_document
-            adminparkingplace = (await datasources.parkingAPI.get(identityToken))
+            console.log(parkId+identityToken+"captura2")
+            adminparkingplace = (await dataSources.parkingAPI.get(userIdToken)).admin_id
+            
             if(identityToken == adminparkingplace) 
-                return await dataSources.parkingAPI.parkingById(adminId);
+                return await dataSources.parkingAPI.parkingById(parkId);
             else
                 return null;
         },
-
-        listParking_admin: async(_, { }, { }) => {
+        
+        listParking_admin: async(_, { adminId }, { dataSources, userIdToken }) => {
             /* listParking_admin(adminId:String!):[Parking]*/
+
         },
 
-        listParking_place: async(_, { }, { }) => {
+        listParking_place: async(_, { parkingPlace }, { dataSources, userIdToken }) => {
             /* listParking_place(parkingPlace:String!):[Parking]*/ 
         },
-        
-        parkings: async(_, { }, { }) => {
+
+        parkings: async(_, { }, { dataSources, userIdToken  }) => {
             /* parkings:[Parking]*/ 
         },   
 
-        
-        transactionByUsername: async(_, { username }, { dataSources, userIdToken}) => {
-            /*transactionByUsername(username:String!):[Transaction] */
-            usernameToken = (await dataSources.authAPI.get(userIdToken)).username
-            if(username == usernameToken) 
-                return await dataSources.accountAPI.transactionsByUsername(username);
-            else
-                return null;
-        }, 
-        transactionById: async(_, { transactionId}, { dataSources, userIdToken} ) => {
-            /*transactionById(transationId:Int!):Transaction */
-            usernameToken       = (await dataSources.authAPI.get(userIdToken)).username
-            const transaction   = await dataSources.accountAPI.transactionsById( transactionId )
-            usernameTransaction = transaction.usernameOrigin
-            if(usernameToken == usernameTransaction)
-                return transaction;
-            else
-                return null;
-        }
     },
     Mutation: {
-        parkingCreate: async(_, { }, { }) => {
-            /* parkingCreate(parking:ParkingInput!):Parking*/
+        /*parkingCreate(parking:ParkingInput!):Parking*/
+        parkingCreate: async(_, { parking }, { dataSources, userIdToken }) => {
+            identityToken = (await dataSources.authAPI.get(userIdToken)).identity_document
+            if(parking.admin_id == identityToken)
+                return await dataSources.parkingAPI.createParking(parking);
+            else
+                return null;
         },
 
-        parkingUpdate: async(_, { }, { }) => {
+        parkingUpdate: async(_, { parking }, { dataSources, userIdToken }) => {
             /* parkingUpdate(parking:ParkingUpdate!):Parking*/
         },
-        parkingDelete: async(_, { }, { }) => {
+        
+        parkingDelete: async(_, { parkId }, { dataSources, userIdToken }) => {
             /* parkingDelete(parkId:Int!): String!*/
-        },
-
-        createTransaction: async(_, { transaction }, { dataSources, userIdToken }) => {
-            usernameToken = (await dataSources.authAPI.get(userIdToken)).username
-            if(transaction.usernameOrigin == usernameToken)
-                return await dataSources.accountAPI.createTransaction(transaction);
-            else
-                return null;
-        },
-        updateTransaction: async(_, { transaction }, { dataSources, userIdToken }) => {
-            usernameToken       = (await dataSources.authAPI.get(userIdToken)).username
-            usernameTransaction = (await dataSources.accountAPI.transactionsById(transaction.id)).usernameOrigin
-            if(usernameToken == usernameTransaction)
-                return await dataSources.accountAPI.updateTransaction(transaction);
-            else
-                return null;
-
-        },
-        deleteParking: async(_, { username }, { dataSources, userIdToken }) => {
-            usernameToken = (await dataSources.authAPI.get(userIdToken)).username
-        }
+        }, 
     }
 };
 
