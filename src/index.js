@@ -4,7 +4,9 @@ const typeDefs       = require('./typeDefs');
 const resolvers      = require('./resolvers');
 const authentication = require('./utils/authentication');
 const AuthAPI        = require('./dataSources/authAPI');
+const ReservationAPI = require('./dataSources/reservationAPI');
 const ParkingAPI     = require('./dataSources/parkingAPI');
+
 
 const server = new ApolloServer({
     context: authentication,
@@ -12,7 +14,8 @@ const server = new ApolloServer({
     resolvers,
     dataSources: () => ({
         authAPI   : new AuthAPI(),
-        parkingAPI: new ParkingAPI(),
+        reservationAPI : new ReservationAPI(),
+        parkingAPI: new ParkingAPI()
     }),
     introspection: true,
     playground   : true
