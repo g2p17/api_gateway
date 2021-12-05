@@ -17,16 +17,8 @@ const parkingResolver = {
             return null;
         },
 
-        listParking_place: async(_, { parkingPlace }, { dataSources, userIdToken }) => {
-            identityToken   = (await dataSources.authAPI.getUser(userIdToken)).identity_document        
-            placeAdminID    = ( await dataSources.parkingAPI.getparkingByPlace(parkingPlace))
-            const myVal = placeAdminID.find(function(element) {
-                return element ;
-              });
-            if(identityToken == myVal.admin_id)
-                return await dataSources.parkingAPI.getparkingByPlace(parkingPlace); 
-
-            return null; 
+        listParking_place: async(_, { parkingPlace }, { dataSources }) => {          
+            return await dataSources.parkingAPI.getparkingByPlace(parkingPlace); 
         },
 
         parkings: async(_, { }, { dataSources }) => {
