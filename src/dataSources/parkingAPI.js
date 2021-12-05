@@ -11,7 +11,7 @@ class ParkingAPI extends RESTDataSource {
 
     async parkingCreate(parkingC){
         parkingC = new Object(JSON.parse(JSON.stringify(parkingC)));
-        return await this.post('/parking/create');
+        return await this.post('parking/create/', parkingC);
     }
 
     async getparkingPlaceById(parkId){
@@ -30,9 +30,10 @@ class ParkingAPI extends RESTDataSource {
         return await this.get(`/parkings`);
     }
 
-    async updateParking(parkId){
-        parking = new Object(JSON.parse(JSON.stringify(parkId)));
-        return await this.put(`/parking/update/${parkId}`, parking);
+    async updateParking(parkingUp){
+        parkingUp = new Object(JSON.parse(JSON.stringify(parkingUp)));
+        let parkingId = parkingUp.id;
+        return await this.put(`/parking/update/${parkingId}`, parkingUp);
     }
 
     async deleteParking(parkId){

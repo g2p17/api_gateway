@@ -2,6 +2,7 @@ const { gql } = require('apollo-server')
 
 const parkingTypes = gql `
     type Parking {
+        id:Int!
         admin_id: String!
         parking_place: String!
         vehicle_slots: Int!
@@ -27,7 +28,32 @@ const parkingTypes = gql `
         person_with_disability_price: Int!
     }
 
-    input ParkingUpdate {
+    type ParkingUpd {
+        vehicle_slots: Int!
+        motorcycles_slots: Int!
+        bicycles_slots: Int!
+        person_with_disability_slots: Int!
+        vehicle_price: Int!
+        motorcycles_price: Int!
+        bicycles_price: Int!
+        person_with_disability_price: Int!
+    }
+
+    input ParkingUpdinput {
+        id:Int!
+        admin_id: String!
+        parking_place: String!
+        vehicle_slots: Int!
+        motorcycles_slots: Int!
+        bicycles_slots: Int!
+        person_with_disability_slots: Int!
+        vehicle_price: Int!
+        motorcycles_price: Int!
+        bicycles_price: Int!
+        person_with_disability_price: Int!
+    }
+
+    input ParkingUp{
         vehicle_slots: Int!
         motorcycles_slots: Int!
         bicycles_slots: Int!
@@ -46,8 +72,8 @@ const parkingTypes = gql `
     }
 
     extend type Mutation {
-        parkingCreate(parkingC:ParkingInput!):Parking
-        parkingUpdate(parkingUp:ParkingUpdate!):Parking
+        parkingCreating(parkingC:ParkingInput!):Parking
+        parkingUpdate(parkingUp:ParkingUp!, id:Int! ):ParkingUpd
         parkingDelete(parkId:Int!): String!  
     }
 `;
