@@ -51,12 +51,28 @@ const authTypes = gql `
         reservation: String!
     }
 
+    input QuotationInput {
+        parkingLot: String!
+        vehicleType: String!
+        entryTime: String!
+        estimatedTime: Int!
+    }
+
+    type QuotationResult {
+        parkingLot: String!
+        vehicleType: String!
+        entryTime: String!
+        price: Float!
+        state: String!
+    }
+
     extend type Query {
         reservationsDetailByparkingLot(parkinglot:String!):[ ReservationDetailParkinglot ]!
         reservationsDetailByparkingLotCustomers(parkinglot:String!):[ InfoCustomer ]!
         reservationCountReservation(parkinglot: String!): ResultReservation!
         reservationsDetail:[ ReservationDetail ]!
         reservationById(reservationId:String!): ReservationDetail!
+        computeQuote(quotation: QuotationInput!): QuotationResult!
     }
 
     extend type Mutation{

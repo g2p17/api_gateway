@@ -37,6 +37,51 @@ const reservationResolver = {
         },
         reservationCountReservation: async(_, { parkinglot }, { dataSources }) => {
             return await dataSources.reservationAPI.reservationCount(parkinglot);
+        },
+        computeQuote: async(_, { quotation }, { dataSources }) => {
+            parkinglots = await dataSources.parkingAPI.getparkingByPlace(quotation.parkingLot);
+            reservationAmount = await dataSources.reservationAPI.reservationCount(quotation.parkingLot);
+            parking = parkinglots[0];            
+            let maximumSlotType = 0;
+
+            if (parkinglots.length == 0) {
+                return {
+                    parkingLot: quotation.parkingLot,
+                    vehicleType: quotation.vehicleType,
+                    entryTime: quotation.entryTime,
+                    price: 0,
+                    state: "Not available"
+                }
+            }
+
+            if (quotation.vehicleType == "Car") {
+                maximumSlotType = parking.vehicle_slots;
+                slot_price = parking.vehicle_price;
+            } else if (quotation.vehicleType == "Motorcycle") {
+                maximumSlotType = parking.motorcycles_slots;
+                slot_price = parking.motorcycles_price;
+            } else if (quotation.vehicleType == "Bicycle") {
+                maximumSlotType = parking.bicycles_slots;
+                slot_price = parking.bicycles_price;
+            } else if (quotation.vehicleType == "Disabled Parking") {
+                maximumSlotType = parking.person_with_disability_slots;
+                slot_price = parking.person_with_disability_price;
+            }      
+
+            availableSlots = maximumSlotType - parseInt(reservationAmount.reservation);
+            if (availableSlots > 0) {
+                priceComputed = quotation.estimatedTime * slot_price;
+
+                return {
+                    parkingLot: quotation.parkingLot,
+                    vehicleType: quotation.vehicleType,
+                    entryTime: quotation.entryTime,
+                    price: priceComputed,
+                    state: "Available"
+                }
+            }
+
+            return null;
         }
     },
     Mutation: {
