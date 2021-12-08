@@ -33,11 +33,11 @@ class ParkingAPI extends RESTDataSource {
     async updateParking(parkingUp){
         parkingUp = new Object(JSON.parse(JSON.stringify(parkingUp)));
         let parkingId = parkingUp.id;
-        return await this.put(`/parking/update/${parkingId}`, parkingUp);
+        return await this.put(`/parking/update/${parkingId}/`, parkingUp);
     }
 
     async deleteParking(parkId){
-        return await this.delete(`parking/remove/${parkId}`);
+        return await this.delete(`parking/remove/${parkId}/`);
     }
 }
 module.exports = ParkingAPI;
