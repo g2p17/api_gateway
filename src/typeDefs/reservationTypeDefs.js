@@ -76,9 +76,9 @@ const authTypes = gql `
     }
 
     extend type Mutation{
-        registerReservation(reservationInput:ReservationInput):ResultReservation!
-        deleteReservation(reservationId:String!): String!
-        updateReservation(reservationId:String, reservationUpdate: ReservationUpdate!): ReservationDetail!
+        registerReservation(reservationInput: ReservationInput):ResultReservation!
+        deleteReservation(reservationId: String!): String!
+        updateReservation(reservationId: String!, reservationUpdate: ReservationUpdate!): ReservationDetail!
     }
 `;
 

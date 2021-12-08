@@ -1,25 +1,20 @@
 const reservationResolver = {
     Query: {
         reservationsDetailByparkingLot: async(_, { parkinglot }, { dataSources, userIdToken}) => {            
-            reservations = await dataSources.reservationAPI.reservationByParkinglot(parkinglot);
-            
-            roleToken = (await dataSources.authAPI.getUser(userIdToken)).role;
-            if (roleToken.localeCompare("admin") == 0)
-                return reservations;
 
-            return null;
-        },
-        reservationsDetail: async(_, { }, { dataSources, userIdToken}) => {
-            roleToken = (await dataSources.authAPI.getUser(userIdToken)).role;
-            reservations = await dataSources.reservationAPI.listReservations();
-            if (roleToken.localeCompare("admin") == 0)
-                return reservations;
+            userIdentity_document = (await dataSources.authAPI.getUser(userIdToken)).identity_document;
+            parkinglots = await dataSources.parkingAPI.getparkingByAdmin(userIdentity_document);
+
+            const result = parkinglots.find(parkingLot => 
+                                                parkingLot.parking_place.localeCompare(parkinglot) == 0);
+            if (result != null)
+                return await dataSources.reservationAPI.reservationByParkinglot(parkinglot);
 
             return null;
         },
         reservationById: async(_, { reservationId }, { dataSources, userIdToken}) => {
-            usernameToken       = (await dataSources.authAPI.getUser(userIdToken)).username;
-            const reservation   = await dataSources.reservationAPI.reservationById(reservationId);
+            usernameToken = (await dataSources.authAPI.getUser(userIdToken)).username;
+            reservation   = await dataSources.reservationAPI.reservationById(reservationId);
             
             usernameReservation = reservation.clientId;
             if(usernameToken == usernameReservation)
@@ -28,15 +23,16 @@ const reservationResolver = {
             return null;
         },
         reservationsDetailByparkingLotCustomers: async(_, { parkinglot }, { dataSources, userIdToken}) => {
-            roleToken = (await dataSources.authAPI.getUser(userIdToken)).role;
-            infoCustomers = await dataSources.reservationAPI.reservationCustomer(parkinglot);
-            if (roleToken.localeCompare("admin") == 0)
-                return infoCustomers;
+
+            userIdentity_document = (await dataSources.authAPI.getUser(userIdToken)).identity_document;
+            parkinglots = await dataSources.parkingAPI.getparkingByAdmin(userIdentity_document);
+
+            const result = parkinglots.find(parkingLot => 
+                                                parkingLot.parking_place.localeCompare(parkinglot) == 0);
+            if (result != null)
+                return await dataSources.reservationAPI.reservationCustomer(parkinglot);
 
             return null;
-        },
-        reservationCountReservation: async(_, { parkinglot }, { dataSources }) => {
-            return await dataSources.reservationAPI.reservationCount(parkinglot);
         },
         computeQuote: async(_, { quotation }, { dataSources }) => {
             parkinglots = await dataSources.parkingAPI.getparkingByPlace(quotation.parkingLot);
@@ -86,8 +82,10 @@ const reservationResolver = {
     },
     Mutation: {
         registerReservation: async (_, { reservationInput }, { dataSources, userIdToken }) => {
+            parkingLot = await dataSources.parkingAPI.getparkingByPlace(reservationInput.parkingLot);
             usernameToken = (await dataSources.authAPI.getUser(userIdToken)).username;
-            if (usernameToken.localeCompare(reservationInput.clientId) == 0) {
+            
+            if (parkingLot.length > 0 && usernameToken.localeCompare(reservationInput.clientId) == 0) {
                 return await dataSources.reservationAPI.createReservation(reservationInput);
             }
             
@@ -103,12 +101,15 @@ const reservationResolver = {
             return null;
         },
         updateReservation: async (_, { reservationId, reservationUpdate }, { dataSources, userIdToken }) => {
+            console.log(reservationId);
+            console.info(reservationUpdate);
             usernameToken = (await dataSources.authAPI.getUser(userIdToken)).username;            
-            reservation = await dataSources.reservationAPI.reservationById(reservationId);            
+            reservation = await dataSources.reservationAPI.reservationById(reservationId);
+            parkingLot = await dataSources.parkingAPI.getparkingByPlace(reservationUpdate.parkingLot);            
             
             reservationUpdate.clientId = reservation.clientId;
 
-            if (usernameToken.localeCompare(reservation.clientId) == 0)
+            if (parkingLot.length > 0 && usernameToken.localeCompare(reservation.clientId) == 0)
                 return await dataSources.reservationAPI.updateReservation(reservationId, reservationUpdate);
             
             return null;
