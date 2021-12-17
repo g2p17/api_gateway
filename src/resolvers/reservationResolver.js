@@ -1,3 +1,5 @@
+const { ApolloError } = require('apollo-server');
+
 const reservationResolver = {
     Query: {
         reservationsDetailByparkingLot: async(_, { parkinglot }, { dataSources, userIdToken}) => {            
@@ -40,15 +42,14 @@ const reservationResolver = {
             parking = parkinglots[0];            
             let maximumSlotType = 0;
 
-            if (parkinglots.length == 0) {
-                return {
-                    parkingLot: quotation.parkingLot,
-                    vehicleType: quotation.vehicleType,
-                    entryTime: quotation.entryTime,
-                    price: 0,
-                    state: "Not available"
-                }
-            }
+            const date1 = new Date();
+            const date2 = new Date(quotation.entryTime);
+
+            if (parkinglots.length == 0)
+                throw new ApolloError(`Not Found parkinglot`, 404);
+
+            if (date2 < date1)
+                throw new ApolloError(`The entryTime must occur after current date `, 400);
 
             if (quotation.vehicleType == "Car") {
                 maximumSlotType = parking.vehicle_slots;
